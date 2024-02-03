@@ -1,5 +1,7 @@
 openai_api_key: 
 
+openaq_api_key:
+
 tmdb_access_token: 
 
 spotipy_client_id: 
