@@ -37,16 +37,18 @@ def main():
 
     api_spec = reduce_openapi_spec(raw_api_spec, only_required=False, merge_allof=True)
 
-    # scopes = list(raw_api_spec['components']['securitySchemes']['oauth_2_0']['flows']['authorizationCode']['scopes'].keys())
-    # access_token = spotipy.util.prompt_for_user_token(scope=','.join(scopes))
-    # headers = {
-    #     'Authorization': f'Bearer {access_token}'
-    # }
+    headers = {
+        "X-API-Key": os.environ["OPENAQ_API_KEY"]
+    }
 
-    requests_wrapper = Requests()
+    requests_wrapper = Requests(headers=headers)
 
     llm = OpenAI(model_name="text-davinci-003", temperature=0.0, max_tokens=700)
-    rest_gpt = RestGPT(llm, api_spec=api_spec, scenario='environment', requests_wrapper=requests_wrapper, simple_parser=False)
+    rest_gpt = RestGPT(llm,
+                       api_spec=api_spec,
+                       scenario='environment',
+                       requests_wrapper=requests_wrapper,
+                       simple_parser=False)
 
     queries = json.load(open('datasets/spotify.json', 'r'))
     queries = [item['query'] for item in queries]
