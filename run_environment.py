@@ -16,8 +16,9 @@ logger = logging.getLogger()
 def main():
     print("Hello world")
 
-    config = yaml.load(open('config.yaml', 'r'), Loader=yaml.FullLoader)
+    config = yaml.load(open('keys_secret.yaml', 'r'), Loader=yaml.FullLoader)
     os.environ["OPENAI_API_KEY"] = config['openai_api_key']
+    os.environ["OPENAQ_API_KEY"] = config['openaq_api_key']
 
     query_idx = 1
 
