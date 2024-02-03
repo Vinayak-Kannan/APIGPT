@@ -5,7 +5,7 @@ import time
 import yaml
 
 from langchain.requests import Requests
-from langchain import OpenAI
+from langchain_community.chat_models import ChatOpenAI
 
 from utils import reduce_openapi_spec, ColorPrint
 from model import RestGPT
@@ -43,22 +43,15 @@ def main():
 
     requests_wrapper = Requests(headers=headers)
 
-    llm = OpenAI(model_name="text-davinci-003", temperature=0.0, max_tokens=700)
+    llm = ChatOpenAI(model_name="gpt-3.5-turbo-0125", temperature=0.0)
     rest_gpt = RestGPT(llm,
                        api_spec=api_spec,
-                       scenario='environment',
+                       scenario='spotify',
                        requests_wrapper=requests_wrapper,
                        simple_parser=False)
 
-    queries = json.load(open('datasets/spotify.json', 'r'))
-    queries = [item['query'] for item in queries]
-
-    query = queries[query_idx - 1]
-
-    logger.info(f"Query: {query}")
-
     start_time = time.time()
-    rest_gpt.run(query)
+    rest_gpt.run("What's pollution like in Palo Alto, CA?")
     logger.info(f"Execution Time: {time.time() - start_time}")
 
 

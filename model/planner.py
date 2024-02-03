@@ -4,7 +4,7 @@ import re
 from langchain.chains.base import Chain
 from langchain.chains.llm import LLMChain
 from langchain.prompts.prompt import PromptTemplate
-from langchain.llms.base import BaseLLM
+from langchain_community.chat_models import ChatOpenAI
 
 icl_examples = {
     "tmdb": """Example 1:
@@ -86,12 +86,12 @@ Plan step 1: {agent_scratchpad}"""
 
 
 class Planner(Chain):
-    llm: BaseLLM
+    llm: ChatOpenAI
     scenario: str
     planner_prompt: str
     output_key: str = "result"
 
-    def __init__(self, llm: BaseLLM, scenario: str, planner_prompt=PLANNER_PROMPT) -> None:
+    def __init__(self, llm: ChatOpenAI, scenario: str, planner_prompt=PLANNER_PROMPT) -> None:
         super().__init__(llm=llm, scenario=scenario, planner_prompt=planner_prompt)
 
     @property
