@@ -289,7 +289,7 @@ class Caller(Chain):
                 return {"result": action_input}
             response, params, request_body, desc, query = self._get_response(action, action_input)
 
-            called_endpoint_name = action + ' ' + json.loads(action_input)['url'].replace(api_url, '')
+            called_endpoint_name = action + ' ' + json.loads(action_input)['url'].replace(api_url, '/') #TODO extremely hacky
             called_endpoint_name = get_matched_endpoint(self.api_spec, called_endpoint_name)[0]
             api_path = api_url + called_endpoint_name.split(' ')[-1]
             api_doc_for_parser = endpoint_docs_by_name.get(called_endpoint_name)

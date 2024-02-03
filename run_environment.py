@@ -14,8 +14,6 @@ logger = logging.getLogger()
 
 
 def main():
-    print("Hello world")
-
     config = yaml.load(open('keys_secret.yaml', 'r'), Loader=yaml.FullLoader)
     os.environ["OPENAI_API_KEY"] = config['openai_api_key']
     os.environ["OPENAQ_API_KEY"] = config['openaq_api_key']
@@ -51,7 +49,7 @@ def main():
                        simple_parser=False)
 
     start_time = time.time()
-    rest_gpt.run("What's pollution like in Palo Alto, CA?")
+    rest_gpt.run("What's pollution like in R K Puram, Delhi?")
     logger.info(f"Execution Time: {time.time() - start_time}")
 
 
