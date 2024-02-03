@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 from typing import Any, Dict, List, Optional, Tuple
 from copy import deepcopy
 import yaml
@@ -8,6 +9,7 @@ import re
 import requests
 
 import tiktoken
+from langchain.agents.openai_assistant import OpenAIAssistantRunnable
 
 from langchain.chains.base import Chain
 from langchain.chains.llm import LLMChain
@@ -16,8 +18,7 @@ from langchain.prompts.prompt import PromptTemplate
 from langchain_community.chat_models import ChatOpenAI
 
 from utils import simplify_json, get_matched_endpoint, ReducedOpenAPISpec, fix_json_error
-from .parser import ResponseParser, SimpleResponseParser
-
+from .parser import ResponseParser, SimpleResponseParser, OpenAiContent
 
 logger = logging.getLogger(__name__)
 
@@ -305,7 +306,19 @@ class Caller(Chain):
                 api_doc_for_parser['responses']['content']['application/json']["schema"]['properties'] = {search_type: api_doc_for_parser['responses']['content']['application/json']["schema"]['properties'][search_type]}
 
             if not self.simple_parser:
+                print(api_doc_for_parser)
+
+                open_ai_content = OpenAiContent(
+                    request_schema=str(api_doc_for_parser['parameters']),
+                    request_header_schema=f"""
+                        headers = {{
+                            "X-API-Key": f{os.environ["OPENAQ_API_KEY"]}
+                        }}
+                    """
+                )
+
                 response_parser = ResponseParser(
+                    open_ai_content=open_ai_content,
                     llm=self.llm,
                     api_path=api_path,
                     api_doc=api_doc_for_parser,
@@ -321,7 +334,7 @@ class Caller(Chain):
                 "params": params if params is not None else "No parameters",
                 "data": request_body if request_body is not None else "No request body",
             }
-            parsing_res = response_parser.run(query=query, response_description=desc, api_param=params_or_data, json=response)
+            parsing_res = response_parser.run(query=query, response_description=desc, api_param=params_or_data, json=response, use_open_ai_assistant=True)
             logger.info(f"Parser: {parsing_res}")
 
             intermediate_steps.append((caller_chain_output, parsing_res))

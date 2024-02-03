@@ -3,6 +3,7 @@ import json
 import logging
 import time
 import yaml
+from langchain.agents.openai_assistant import OpenAIAssistantRunnable
 
 from langchain.requests import Requests
 from langchain_community.chat_models import ChatOpenAI
@@ -42,6 +43,9 @@ def main():
     requests_wrapper = Requests(headers=headers)
 
     llm = ChatOpenAI(model_name="gpt-3.5-turbo-0125", temperature=0.0)
+    # llm = OpenAIAssistantRunnable(assistant_id="asst_VyZ8RsilKBGN7ZEE3go0Y85n", as_agent=False)
+    # llm = OpenAIAssistantRunnable(assistant_id="asst_VyZ8RsilKBGN7ZEE3go0Y85n", as_agent=False)
+
     rest_gpt = RestGPT(llm,
                        api_spec=api_spec,
                        scenario='spotify',
