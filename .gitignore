@@ -3,3 +3,6 @@
 
 # Build files
 *.pyc
+
+# Secrets
+keys_secret.yaml

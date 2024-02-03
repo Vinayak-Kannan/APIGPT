@@ -1,5 +1,7 @@
 openai_api_key: 
 
+openaq_api_key: 9c477c785cc7a1e7d90d1bbe35effcc9d262a75e6a65d21057c2db0c8983bf28
+
 tmdb_access_token: 
 
 spotipy_client_id: 
