@@ -302,7 +302,7 @@ class ResponseParser(Chain):
             template=POSTPROCESS_TEMPLATE,
             input_variables=["truncated_str", "use_open_ai_assistant"]
         )
-        open_ai_parsing_prompt = PromptTemplate(
+        open_ai_schema_prompt = PromptTemplate(
             template=OPEN_AI_PARSING_SCHEMA_TEMPLATE,
             partial_variables={
                 "request_schema": open_ai_content.request_schema,
@@ -314,7 +314,7 @@ class ResponseParser(Chain):
         )
 
         super().__init__(llm=llm,
-                         open_ai_parsing_prompt=open_ai_parsing_prompt,
+                         open_ai_schema_prompt=open_ai_schema_prompt,
                          code_parsing_schema_prompt=code_parsing_schema_prompt,
                          code_parsing_response_prompt=code_parsing_response_prompt,
                          llm_parsing_prompt=llm_parsing_prompt,
@@ -347,6 +347,9 @@ class ResponseParser(Chain):
     def _call(self, inputs: Dict[str, str]) -> Dict[str, str]:
         if inputs['use_open_ai_assistant']:
             agent = OpenAIAssistantRunnable(assistant_id="asst_VyZ8RsilKBGN7ZEE3go0Y85n", as_agent=True)
+            print(self.open_ai_schema_prompt.to_string(query=inputs['query'], json=inputs['json'],
+                                                api_param=inputs['api_param'],
+                                                response_description=inputs['response_description']))
             output = agent.invoke({"content": self.open_ai_schema_prompt})
 
             print(output.return_values)

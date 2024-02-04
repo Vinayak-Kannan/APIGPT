@@ -9,4 +9,3 @@ Input: {
     "description": "Retrieve a list of locations.",
     "output_instructions": "Return the names and ids of the locations."
 }
-HTTP Request: POST https://api.openai.com/v1/threads/runs "HTTP/1.1 400 Bad Request"
